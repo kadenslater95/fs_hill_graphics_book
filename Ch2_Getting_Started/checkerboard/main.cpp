@@ -3,14 +3,21 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#include <stdio.h>
+
 
 void displayFunc();
+void timerFunc(int);
+void specialFunc(int, int, int);
 
 void checkerboard(int, int, int);
 
 
 int viewWidth = 640;
 int viewHeight = 480;
+
+int checkerboardX = 0;
+int checkerboardY = viewHeight;
 
 
 void init() {
@@ -28,13 +35,15 @@ void init() {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
 
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
     glutInitWindowSize(viewWidth, viewHeight);
     glutInitWindowPosition(100, 150);
     glutCreateWindow("OpenGL UT Template");
 
     glutDisplayFunc(displayFunc);
+    glutTimerFunc(27, timerFunc, 0);
+    glutSpecialFunc(specialFunc);
 
     init();
 
@@ -43,12 +52,40 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+
 void displayFunc() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    checkerboard(25, viewHeight - 25, 50);
+    checkerboard(checkerboardX, checkerboardY, 50);
 
-    glFlush();
+    glutSwapBuffers();
+}
+
+
+void timerFunc(int value) {
+    displayFunc();
+}
+
+
+void specialFunc(int key, int x, int y) {
+    int delta = 1;
+
+    switch (key) {
+        case GLUT_KEY_RIGHT:
+            checkerboardX += delta;
+            break;
+        case GLUT_KEY_DOWN:
+            checkerboardY += delta;
+            break;
+        case GLUT_KEY_LEFT:
+            checkerboardX -= delta;
+            break;
+        case GLUT_KEY_UP:
+            checkerboardY -= delta;
+            break;
+        default:
+            break;
+    }
 }
 
 
