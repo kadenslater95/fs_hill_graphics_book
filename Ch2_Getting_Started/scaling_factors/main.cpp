@@ -28,9 +28,15 @@ void myInit(void) {
     glLoadIdentity();
     gluOrtho2D(0.0, (GLdouble)screenWidth, 0.0, (GLdouble)screenHeight);
 
-    A = screenWidth / 4.0; // set values used for scaling and shifting
-    B = 0.0;
-    C = D = screenHeight / 2.0;
+    double x_min = 0.0;
+    double x_max = 4.0;
+    double y_min = -1.0;
+    double y_max = 1.0;
+
+    A = screenWidth*0.97 / (x_max - x_min); // set values used for scaling and shifting
+    B = screenWidth / 2.0;
+    C = screenHeight*0.97 / (y_max - y_min);
+    D = screenHeight / 2.0;
 }
 
 
@@ -38,9 +44,18 @@ void myDisplay(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     // clear the screen
 
+    glBegin(GL_LINES);
+        glVertex2d(0.0, (double) screenHeight/2.0);
+        glVertex2d((double) screenWidth, (double) screenHeight/2.0);
+
+        glVertex2d((double) screenWidth/2.0, 0.0);
+        glVertex2d((double) screenWidth/2.0, (double) screenWidth);
+    glEnd();
+
+
     glBegin(GL_POINTS);
 
-    for(GLdouble x = 0; x < 4.0 ; x += 0.005) {
+    for(GLdouble x = 0.0; x < 4.0 ; x += 0.005) {
         GLdouble func = exp(-x) * cos(2 * 3.14159265 * x);
         glVertex2d(A * x + B, C * func + D);
     }
